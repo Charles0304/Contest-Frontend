@@ -10,8 +10,8 @@ export default function Header() {
                 </a>
                 <nav className="flex-grow">
                     <a href="/search" className="mr-5 text-black no-underline">Search</a>
-                    <a href="#my-page" className="mr-5 text-black no-underline">My page</a>
-                    <a href="#hs-code-description" className="mr-5 text-black no-underline">HS코드 설명</a>
+                    <a href="/mypage" className="mr-5 text-black no-underline">My page</a>
+                    <a href="/description" className="mr-5 text-black no-underline">HS코드 설명</a>
                 </nav>
                 <a href="/login" className="text-black no-underline mr-5">Login</a>
             </div>

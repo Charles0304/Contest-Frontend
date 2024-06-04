@@ -5,9 +5,11 @@ import Footer from '../components/Footer'
 
 export default function Login() {
   return (
-    <div className='flex flex-col h-screen'>
+    <div className='flex flex-col h-screen bg-gray-100'>
         <Header/>
-        <LoginForm/>
+        <div className='h-screen flex justify-center items-center'>
+          <LoginForm/>
+        </div>
         <Footer/>
     </div>
   )

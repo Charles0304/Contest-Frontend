@@ -1,7 +1,9 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import myImage from '../assets/img/main.png'
+import { AuthContext } from './AuthContext'
 
 export default function Header() {
+    const {isLoggedIn,logout} = useContext(AuthContext);
     return (
         <header className="flex justify-between items-center p-2.5 bg-white border-b border-gray-300">
             <div className="flex items-center w-full">
@@ -13,8 +15,13 @@ export default function Header() {
                     <a href="/mypage" className="mr-5 text-black no-underline">My page</a>
                     <a href="/description" className="mr-5 text-black no-underline">HS코드 설명</a>
                 </nav>
-                <a href="/login" className="text-black no-underline mr-5">Login</a>
-            </div>
+                {isLoggedIn ?(
+                    <button onClick={logout} className="text-black no-underline mr-5">Logout</button>
+                ):(
+                    <a href="/login" className="text-black no-underline mr-5">Login</a>
+
+                )}
+                </div>
         </header>
     )
 }

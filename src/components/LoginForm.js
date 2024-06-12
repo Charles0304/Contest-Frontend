@@ -1,6 +1,35 @@
-import React from 'react'
-
+import axios from 'axios';
+import React, { useContext, useState } from 'react'
+import { Navigate, useNavigate } from 'react-router-dom';
+import { AuthContext } from './AuthContext';
 export default function LoginForm() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const {login} = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleLogin = async (e)=>{
+    e.preventDefault();
+    const response = await fetch('http://10.125.121.220:8080/login',{
+      method: 'POST',
+      headers:{
+        'Content-Type':'application/json',
+      },
+      body: JSON.stringify({email,password}),
+    });
+    if(response.ok){
+      const data = await response.json();
+      //JWT를 로컬 스토리지에 저장
+      localStorage.setItem('token',response.headers['Authorization']);
+      //사용자 정보를 로컬 스토리지에 저장
+      localStorage.setItem('user',JSON.stringify(data));
+      console.log(response.headers['Authorization']);
+      login();
+      navigate('/search')
+    }else{
+      console.error('Login failed');
+    }
+  }
   return (
     <div className='bg-white rounded-lg shadow w-1/3 py-5'>
       <div className="flex flex-1 flex-col justify-center px-6">
@@ -12,7 +41,7 @@ export default function LoginForm() {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6" action="#" method="POST">
+          <form className="space-y-6" onSubmit={handleLogin}>
             <div>
               <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
                 Email address
@@ -22,9 +51,11 @@ export default function LoginForm() {
                   id="email"
                   name="email"
                   type="email"
+                  value={email}
                   autoComplete="email"
+                  onChange={(e)=>setEmail(e.target.value)}
                   required
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -45,9 +76,11 @@ export default function LoginForm() {
                   id="password"
                   name="password"
                   type="password"
+                  value={password}
                   autoComplete="current-password"
+                  onChange={(e)=>setPassword(e.target.value)}
                   required
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
             </div>

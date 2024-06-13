@@ -1,13 +1,13 @@
 import axios from 'axios';
 import React, { useContext, useState } from 'react'
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { AuthContext } from './AuthContext';
 export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const {login} = useContext(AuthContext);
   const navigate = useNavigate();
-
+  
   const handleLogin = async (e)=>{
     e.preventDefault();
     const response = await fetch('http://10.125.121.220:8080/login',{
@@ -29,7 +29,7 @@ export default function LoginForm() {
     }else{
       console.error('Login failed');
     }
-  }
+  } 
   return (
     <div className='bg-white rounded-lg shadow w-1/3 py-5'>
       <div className="flex flex-1 flex-col justify-center px-6">
@@ -97,9 +97,9 @@ export default function LoginForm() {
 
           <p className="mt-10 text-center text-sm text-gray-500">
             Not a member?{' '}
-            <a href="/signup" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
+            <Link to="/signup" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
               Sign up
-            </a>
+            </Link>
           </p>
         </div>
       </div>

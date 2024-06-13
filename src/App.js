@@ -8,6 +8,7 @@ import MyPage from './pages/MyPage';
 import CodeDescription from './pages/CodeDescription';
 import { AuthProvider, AuthContext } from './components/AuthContext';
 import React from 'react';
+import QnAPage from './pages/QnAPage';
 
 const PrivateRoute = ({children})=>{
   const {isLoggedIn} = React.useContext(AuthContext);
@@ -25,6 +26,7 @@ function App() {
           <Route path='/signup' element={<Signup />}></Route>
           <Route path='/mypage' element={<MyPage />}></Route>
           <Route path='/description' element={<CodeDescription />}></Route>
+          <Route path='/qna' element={<QnAPage/>}></Route>
         </Routes>
       </BrowserRouter>
     </AuthProvider>

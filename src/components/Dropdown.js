@@ -8,8 +8,9 @@ export default function Dropdown({label,options,selectedOption, onChange}) {
             <select
               className='p-2 border border-gray-300 rounded'
               value={selectedOption}
-              onChange={e=>onChange(e.target.value)}
+              onChange={onChange}
             >
+              <option value="" disabled>Select a category</option>
                 {options.map(option=>(
                     <option key={option} value={option}>
                         {option}

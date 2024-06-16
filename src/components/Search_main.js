@@ -2,63 +2,24 @@
 import React, { useState } from 'react'
 import { FaArrowRight } from 'react-icons/fa';
 import Scrollbar from '../components/Scrollbar';
-import axios from 'axios';
 
 export default function Search_main() {
     const [inputText, setInputText] = useState('input');
-    const [translatedText, setTranslatedText] = useState('Result');
     const [isLoading, setIsLoading] = useState(false);
     const [items, setItems] = useState([]);
+    
     const handleData = () => {
         setIsLoading(true);
-
-        setTranslatedText("Result asdfsdfa");
-        setItems([{
-            "hscode": "0101-21-1000",
-            "hscode1": 101,
-            "hscode2": 21,
-            "hscode3": 1000,
-            "hs1englishitem": "Live horses, asses, mules and hinnies.",
-            "hs1koreanitem": "살아 있는 말ㆍ당나귀ㆍ노새ㆍ버새",
-            "hs2englishitem": "Pure-bred breeding animals",
-            "hs3englishitem": "For farm breeding",
-            "hs3koreanitem": "농가 사육용",
-            "classificationcode": 11020101,
-            "classificationcodename": "(말)",
-            "img": "horse"
-        },
-        {
-            "hscode": "2833-29-1000",
-            "hscode1": 2833,
-            "hscode2": 29,
-            "hscode3": 1000,
-            "hs1englishitem": "Sulphates; alums; peroxosulphates (persulphates).",
-            "hs1koreanitem": "황산염ㆍ명반ㆍ과산화황산염(과황산염)",
-            "hs2englishitem": "Other",
-            "hs3englishitem": "Iron sulphates",
-            "hs3koreanitem": "황산철",
-            "classificationcode": 25030101,
-            "classificationcodename": "(무기화합물)",
-            "img": "compound"
-        },
-        {
-            "hscode": "9706-90-2000",
-            "hscode1": 9706,
-            "hscode2": 90,
-            "hscode3": 2000,
-            "hs1englishitem": "Antiques of an age exceeding 100 years.",
-            "hs1koreanitem": "골동품(제작 후 100년을 초과한 것으로 한정한다)",
-            "hs2englishitem": "Other",
-            "hs3englishitem": "Musical instruments",
-            "hs3koreanitem": "악기류",
-            "classificationcode": 12050201,
-            "classificationcodename": "(수집품 및 골동품)",
-            "img": "vase"
-        }
-    ]);
-    setIsLoading(false);
     
+        setTimeout(() => {
+            fetch('http://10.125.121.220:8080/hscode/random-hscodes')
+            .then((resp) => resp.json())
+            .then((data) => setItems(data));
+            setIsLoading(false);
+        }, 3000);
     };
+    
+    
     return (
         <div className='h-screen bg-gray-100 flex items-center justify-center'>
             <div className='bg-white p-6 rounded-lg shadow-lg flex justify-between space-x-4 w-3/4'>

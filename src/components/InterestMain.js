@@ -3,7 +3,7 @@ import React from 'react'
 export default function InterestMain() {
   return (
     <main className="w-3/4 p-4">
-        <h2 className="text-2xl font-bold mb-4">관심공공데이터</h2>
+        <h2 className="text-2xl font-bold mb-4">관심HSCode</h2>
         <div className="mb-4 flex justify-between">
           <span className="text-gray-700">전체 0건</span>
           <button className="ml-4 px-3 py-1 border rounded text-sm text-gray-700 hover:text-gray-900">관심 공공데이터 삭제</button>

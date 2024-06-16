@@ -1,68 +1,110 @@
-// src/App.js
-import { useState } from 'react';
-
-const data = [
-    {
-        id: 1,
-        question: "박석운 10일 주문",
-        author: "kdy*******",
-        date: "2024.06.11",
-        answer: "",
-        answerDate: ""
-    },
-    {
-        id: 2,
-        question: "운동화 끈 문의",
-        author: "sah*******",
-        date: "2024.06.08",
-        answer: "",
-        answerDate: ""
-    },
-    {
-        id: 3,
-        question: "사이즈문의",
-        author: "kay*******",
-        date: "2024.06.04",
-        answer: "안녕하세요 신세계백화점 나이키입니다. 고객님의 문의하신 사항 잘 보았습니다. 문의하신 제품 남여공용 상품입니다. 더 궁금하신 사항 있으시면 언제든지 문의해주세요. 항상 이용해 주셔서 정말 감사합니다.",
-        answerDate: "2024.06.05"
-    },
-    // 추가 데이터...
-];
-
+import React, { useEffect, useState } from 'react';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 
 export default function QnABoard() {
+    const [data, setData] = useState([]);
     const [selectedId, setSelectedId] = useState(null);
+    const [isFormVisible, setIsFormVisible] = useState(false);
+    const [newTitle, setNewTitle] = useState('');
+    const [newContent, setNewContent] = useState('');
+
+    useEffect(() => {
+        fetch('http://10.125.121.220:8080/api/questions-answers')
+            .then((resp) => resp.json())
+            .then((data) => setData(data));
+    }, []);
 
     const toggleSelect = (id) => {
         setSelectedId(selectedId === id ? null : id);
     };
 
+    const handleFormSubmit = (e) => {
+        e.preventDefault();
+
+        const newQuestionData = {
+            title: newTitle,
+            content: newContent,
+            isAnswered:false,
+            member:{
+                id:1 //나중에 로그인 한 사용자로 변경
+            }
+        };
+
+        fetch('http://10.125.121.220:8080/api/questions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newQuestionData)
+        })
+        .then((resp) => resp.json())
+        .then((savedQuestion) => {
+            setNewContent('');
+            setNewTitle('');
+            setIsFormVisible(false);
+            window.location.reload()
+        });
+    };
+
     return (
         <div className="container mx-auto p-4">
+            
             <h1 className="text-2xl font-bold mb-4">Q&A 게시판</h1>
+            <button 
+                onClick={() => setIsFormVisible(!isFormVisible)} 
+                className="mb-4 px-4 py-2 bg-blue-500 text-white rounded"
+            >
+                문의하기
+            </button>
+            {isFormVisible && (
+                <form className="mb-4 p-4 border rounded" onSubmit={handleFormSubmit}>
+                    <div className="mb-4">
+                        <label className="block text-gray-700">제목</label>
+                        <input 
+                            type="text" 
+                            value={newTitle} 
+                            onChange={(e) => setNewTitle(e.target.value)} 
+                            className="w-full p-2 border rounded" 
+                            required 
+                        />
+                    </div>
+                    <div className="mb-4">
+                        <label className="block text-gray-700">내용</label>
+                        <input 
+                            type="text" 
+                            value={newContent} 
+                            onChange={(e) => setNewContent(e.target.value)} 
+                            className="w-full p-2 border rounded" 
+                            required 
+                        />
+                    </div>
+                    <button type="submit" className="px-4 py-2 bg-green-500 text-white rounded">문의 제출</button>
+                </form>
+            )}
             <ul className="space-y-4">
                 {data.map(item => (
-                    <li key={item.id} className="border p-4 rounded shadow">
-                        <div className="flex justify-between items-center cursor-pointer" onClick={() => toggleSelect(item.id)}>
+                    <li key={item.questionSeq} className="border p-4 rounded shadow">
+                        <div className="flex justify-between items-center cursor-pointer" onClick={() => toggleSelect(item.questionSeq)}>
                             <div>
-                                <h2 className="text-lg font-semibold">{item.question}</h2>
-                                <p className="text-sm text-gray-600">작성자: {item.author} | 날짜: {item.date}</p>
+                                <h2 className="text-lg font-semibold">{item.questionTitle}</h2>
+                                <p className="text-sm text-gray-600">작성자: {item.questionAuthor} | 날짜: {item.questionDate.split('T')[0]}</p>
                             </div>
                             <div className="text-sm">
-                                {item.answer ? (
+                                {item.answerTitle ? (
                                     <span className="text-green-600">답변완료</span>
                                 ) : (
                                     <span className="text-red-600">답변대기</span>
                                 )}
                             </div>
                         </div>
-                        {selectedId === item.id && (
+                        {selectedId === item.questionSeq && (
                             <div className="mt-4">
-                                <p className="text-gray-800">질문: {item.question}</p>
-                                {item.answer ? (
+                                <p className="text-gray-800">질문: {item.questionContent}</p>
+                                {item.answerTitle ? (
                                     <>
-                                        <p className="text-gray-800 mt-2">답변: {item.answer}</p>
-                                        <p className="text-sm text-gray-600 mt-1">답변 날짜: {item.answerDate}</p>
+                                        <p className="text-gray-800 mt-2">답변: {item.answerContent}</p>
+                                        <p className="text-sm text-gray-600 mt-1">답변 날짜: {item.answerDate.split('T')[0]}</p>
                                     </>
                                 ) : (
                                     <p className="text-gray-800 mt-2">답변이 아직 없습니다.</p>

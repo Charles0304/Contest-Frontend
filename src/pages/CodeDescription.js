@@ -83,7 +83,7 @@ export default function CodeDescription() {
     return (
         <div className='flex flex-col h-screen'>
             <Header />
-            <div className='p-4 h-screen w-full flex flex-col justify-center items-center'>
+            <div className='flex-grow p-4 w-full flex flex-col justify-center items-center'>
                 <h2 className="text-2xl font-bold mb-4">HS코드 검색</h2>
                 <div className='grid grid-cols-3 gap-4 mb-4 w-3/4'>
                     <DropdownSearch

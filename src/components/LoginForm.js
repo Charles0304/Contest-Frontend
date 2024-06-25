@@ -23,7 +23,6 @@ export default function LoginForm() {
       localStorage.setItem('token',response.headers['Authorization']);
       //사용자 정보를 로컬 스토리지에 저장
       localStorage.setItem('user',JSON.stringify(data));
-      console.log(response.headers['Authorization']);
       login();
       navigate('/search')
     }else{

@@ -25,9 +25,9 @@ export default function QnABoard() {
         const newQuestionData = {
             title: newTitle,
             content: newContent,
-            isAnswered:false,
-            member:{
-                id:1 //나중에 로그인 한 사용자로 변경
+            isAnswered: false,
+            member: {
+                id: 1 // 나중에 로그인 한 사용자로 변경
             }
         };
 
@@ -38,22 +38,21 @@ export default function QnABoard() {
             },
             body: JSON.stringify(newQuestionData)
         })
-        .then((resp) => resp.json())
-        .then((savedQuestion) => {
-            setNewContent('');
-            setNewTitle('');
-            setIsFormVisible(false);
-            window.location.reload()
-        });
+            .then((resp) => resp.json())
+            .then((savedQuestion) => {
+                setNewContent('');
+                setNewTitle('');
+                setIsFormVisible(false);
+                window.location.reload()
+            });
     };
 
     return (
-        <div className="container mx-auto p-4">
-            
+        <div className="container mx-auto p-4 h-full flex flex-col">
             <h1 className="text-2xl font-bold mb-4">Q&A 게시판</h1>
             <button 
                 onClick={() => setIsFormVisible(!isFormVisible)} 
-                className="mb-4 px-4 py-2 bg-blue-500 text-white rounded"
+                className="mb-4 px-4 py-2 bg-blue-500 text-white rounded w-1/2"
             >
                 문의하기
             </button>
@@ -82,38 +81,40 @@ export default function QnABoard() {
                     <button type="submit" className="px-4 py-2 bg-green-500 text-white rounded">문의 제출</button>
                 </form>
             )}
-            <ul className="space-y-4">
-                {data.map(item => (
-                    <li key={item.questionSeq} className="border p-4 rounded shadow">
-                        <div className="flex justify-between items-center cursor-pointer" onClick={() => toggleSelect(item.questionSeq)}>
-                            <div>
-                                <h2 className="text-lg font-semibold">{item.questionTitle}</h2>
-                                <p className="text-sm text-gray-600">작성자: {item.questionAuthor} | 날짜: {item.questionDate.split('T')[0]}</p>
+            <div className="flex-1 overflow-auto">
+                <ul className="space-y-4">
+                    {data.map(item => (
+                        <li key={item.questionSeq} className="border p-4 rounded shadow">
+                            <div className="flex justify-between items-center cursor-pointer" onClick={() => toggleSelect(item.questionSeq)}>
+                                <div>
+                                    <h2 className="text-lg font-semibold">{item.questionTitle}</h2>
+                                    <p className="text-sm text-gray-600">작성자: {item.questionAuthor} | 날짜: {item.questionDate.split('T')[0]}</p>
+                                </div>
+                                <div className="text-sm">
+                                    {item.answerTitle ? (
+                                        <span className="text-green-600">답변완료</span>
+                                    ) : (
+                                        <span className="text-red-600">답변대기</span>
+                                    )}
+                                </div>
                             </div>
-                            <div className="text-sm">
-                                {item.answerTitle ? (
-                                    <span className="text-green-600">답변완료</span>
-                                ) : (
-                                    <span className="text-red-600">답변대기</span>
-                                )}
-                            </div>
-                        </div>
-                        {selectedId === item.questionSeq && (
-                            <div className="mt-4">
-                                <p className="text-gray-800">질문: {item.questionContent}</p>
-                                {item.answerTitle ? (
-                                    <>
-                                        <p className="text-gray-800 mt-2">답변: {item.answerContent}</p>
-                                        <p className="text-sm text-gray-600 mt-1">답변 날짜: {item.answerDate.split('T')[0]}</p>
-                                    </>
-                                ) : (
-                                    <p className="text-gray-800 mt-2">답변이 아직 없습니다.</p>
-                                )}
-                            </div>
-                        )}
-                    </li>
-                ))}
-            </ul>
+                            {selectedId === item.questionSeq && (
+                                <div className="mt-4">
+                                    <p className="text-gray-800">질문: {item.questionContent}</p>
+                                    {item.answerTitle ? (
+                                        <>
+                                            <p className="text-gray-800 mt-2">답변: {item.answerContent}</p>
+                                            <p className="text-sm text-gray-600 mt-1">답변 날짜: {item.answerDate.split('T')[0]}</p>
+                                        </>
+                                    ) : (
+                                        <p className="text-gray-800 mt-2">답변이 아직 없습니다.</p>
+                                    )}
+                                </div>
+                            )}
+                        </li>
+                    ))}
+                </ul>
+            </div>
         </div>
     );
 }

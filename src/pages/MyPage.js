@@ -8,7 +8,7 @@ export default function MyPage() {
   return (
     <div className='flex flex-col h-screen'>
         <Header/>
-        <div className="flex h-full">
+        <div className="flex flex-grow h-full">
             <Aside/>
             <InterestMain/>
         </div>

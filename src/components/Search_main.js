@@ -4,7 +4,7 @@ import { FaArrowRight } from 'react-icons/fa';
 import Scrollbar from '../components/Scrollbar';
 
 export default function Search_main() {
-    const [inputText, setInputText] = useState('input');
+    const [inputText, setInputText] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [items, setItems] = useState([]);
     
@@ -31,6 +31,7 @@ export default function Search_main() {
                         rows="18"
                         className='p-4 mb-8 shadow-lg rounded-xl ring-1 ring-black/5'
                         value={inputText}
+                        placeholder='input'
                         onChange={(e) => setInputText(e.target.value)}
                     />
                     

@@ -1,37 +1,91 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 export default function InterestMain() {
+  const [data, setData] = useState([]);
+  const [selectedItems, setSelectedItems] = useState([]);
+
+  useEffect(() => {
+    fetch('http://10.125.121.220:8080/like/' + JSON.parse(localStorage.getItem('user')).id)
+      .then((resp) => resp.json())
+      .then((d) => setData(d));
+    console.log(data.length)
+  }, [])
+
+  const handleCheckboxChange = (id) => {
+    if (selectedItems.includes(id)) {
+      setSelectedItems(selectedItems.filter(item => item !== id));
+    } else {
+      setSelectedItems([...selectedItems, id]);
+    }
+  }
+
+  const handleDelete = () => {
+    const userId = JSON.parse(localStorage.getItem('user')).id;
+    const deletePromises = selectedItems.map(hscode =>
+      fetch(`http://10.125.121.220:8080/like/${userId}/${hscode}`, {
+        method: "DELETE"
+      })
+    );
+    Promise.all(deletePromises).then(() => {
+      setData(data.filter(item => !selectedItems.includes(item.hsCode.hscode)));
+      setSelectedItems([]);
+    })
+  }
+
   return (
-    <main className="w-3/4 p-4">
-        <h2 className="text-2xl font-bold mb-4">관심HSCode</h2>
-        <div className="mb-4 flex justify-between">
-          <span className="text-gray-700">전체 0건</span>
-          <button className="ml-4 px-3 py-1 border rounded text-sm text-gray-700 hover:text-gray-900">관심 공공데이터 삭제</button>
-        </div>
-        <table className="w-full border-collapse border border-gray-300">
-          <thead>
+    <div className="container mx-auto p-4 h-full flex flex-col">
+      <h2 className="text-2xl font-bold mb-4">관심HSCode</h2>
+      <div className="mb-4 flex justify-between">
+        <span className="text-gray-700">전체 {data.length}건</span>
+      </div>
+      <table className="w-full border-collapse border border-gray-300">
+        <thead>
+          <tr>
+            <th className="border border-gray-300 p-2">선택</th>
+            <th className="border border-gray-300 p-2">HsCode</th>
+            <th className="border border-gray-300 p-2">한글설명</th>
+            <th className="border border-gray-300 p-2">영어설명</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.length < 1 ? (
             <tr>
-              <th className="border border-gray-300 p-2">전체선택</th>
-              <th className="border border-gray-300 p-2">데이터유형</th>
-              <th className="border border-gray-300 p-2">데이터명</th>
-              <th className="border border-gray-300 p-2">메일수신여부</th>
+              <td className="border border-gray-300 p-2 text-center" colSpan="4">관심 HsCode가 없습니다. 관심 코드를 등록해주세요.</td>
             </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td className="border border-gray-300 p-2 text-center" colSpan="4">자료가 없습니다. 다른 검색조건을 선택해주세요.</td>
-            </tr>
-          </tbody>
-        </table>
-        <div className="mt-4 flex justify-between">
-          <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">수신</button>
-          <button className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">미수신</button>
-        </div>
-        <p className="mt-4 text-sm text-gray-600">
-          * 관심 공공정보 업데이트 알림메일 수신을 원하시는 경우
-          <br />1) 알림메일 수신을 받고자 하는 데이터를 선택해 주세요.
-          <br />2) 수신 버튼을 클릭해 주세요.
-        </p>
-      </main>
+          ) : (
+            <>
+              {data.map((item, index) => (
+                <tr key={index}>
+                  <td className='px-4 py-2 border'>
+                    <input
+                      type="checkbox"
+                      checked={selectedItems.includes(item.hsCode.hscode)}
+                      onChange={() => handleCheckboxChange(item.hsCode.hscode)}
+                    />
+                  </td>
+                  <td className='px-4 py-2 border'>{item.hsCode.hscode}</td>
+                  <td className='px-4 py-2 border'>{item.hsCode.hs1koreanitem}</td>
+                  <td className='px-4 py-2 border'>{item.hsCode.hs1englishitem}</td>
+
+                </tr>
+              ))}
+            </>
+          )}
+        </tbody>
+      </table>
+
+      <div className="mt-4 flex justify-between">
+        <button className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+          onClick={handleDelete}
+        >
+          삭제
+        </button>
+      </div>
+      <p className="mt-4 text-sm text-gray-600">
+        * 관심 HSCode 삭제를 원하시는 경우
+        <br />1) 삭제하고자 하는 데이터를 선택해 주세요.
+        <br />2) 삭제 버튼을 클릭해 주세요.
+      </p>
+    </div>
   )
 }

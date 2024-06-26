@@ -8,8 +8,13 @@ export default function QnABoard() {
     const [isFormVisible, setIsFormVisible] = useState(false);
     const [newTitle, setNewTitle] = useState('');
     const [newContent, setNewContent] = useState('');
-
+    const [answerContent, setAnswerContent] = useState('');
+    const [role, setRole] = useState('');
     useEffect(() => {
+        const storedUser = JSON.parse(localStorage.getItem('user'));
+        if(storedUser&&storedUser.role){
+            setRole(storedUser.role)
+        }
         fetch('http://10.125.121.220:8080/api/questions-answers')
             .then((resp) => resp.json())
             .then((data) => setData(data));
@@ -45,6 +50,34 @@ export default function QnABoard() {
                 setIsFormVisible(false);
                 window.location.reload()
             });
+    };
+
+    const handleAnswerSubmit = (e,questionSeq)=>{
+        e.preventDefault();
+        
+        const answerData = {
+            title:"답변",
+            content:answerContent,
+            questionBoard:{
+                seq:questionSeq
+            },
+            member:{
+                id:1//나중에 로그인 한 사용자로 변경
+            }
+        };
+
+        fetch('http://10.125.121.220:8080/api/answers',{
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify(answerData)
+        })
+        .then((resp)=>resp.json())
+        .then((savedAnswer)=>{
+            setAnswerContent('');
+            window.location.reload();
+        });
     };
 
     return (
@@ -107,7 +140,22 @@ export default function QnABoard() {
                                             <p className="text-sm text-gray-600 mt-1">답변 날짜: {item.answerDate.split('T')[0]}</p>
                                         </>
                                     ) : (
+                                        <>
                                         <p className="text-gray-800 mt-2">답변이 아직 없습니다.</p>
+                                        {role==='ROLE_MANAGER'&&(
+                                            <form className='mt-4' onSubmit={(e)=>handleAnswerSubmit(e,item.questionSeq)}>
+                                                <label className='block text-gray-700'>답변 내용</label>
+                                                <input
+                                                    type="text"
+                                                    value={answerContent}
+                                                    onChange={(e)=>setAnswerContent(e.target.value)}
+                                                    className='w-full p-2 border rounded'
+                                                    required
+                                                />
+                                                <button type="submit" className='mt-2 px-4 py-2 bg-blue-500 text-white rounded'>답변 제출</button>
+                                            </form>
+                                        )}
+                                        </>
                                     )}
                                 </div>
                             )}

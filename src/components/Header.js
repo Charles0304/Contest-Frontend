@@ -1,10 +1,26 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import myImage from '../assets/img/main.png'
-import { AuthContext } from './AuthContext'
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { isLoggedInState, userState } from '../recoil/atoms';
+
+
+
 
 export default function Header() {
-    const {isLoggedIn,logout} = useContext(AuthContext);
+    const isLoggedIn = useRecoilValue(isLoggedInState);
+    const setIsLoggedIn = useSetRecoilState(isLoggedInState);
+    const user = useRecoilValue(userState);
+    const setUser = useSetRecoilState(userState);
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        setIsLoggedIn(false);
+        setUser(null);
+        localStorage.removeItem('user');
+        navigate('/')
+    }
+    console.log("nickname",user)
     return (
         <header className="flex justify-between items-center p-2.5 bg-white border-b border-gray-300">
             <div className="flex items-center w-full">
@@ -17,7 +33,10 @@ export default function Header() {
                     <Link to="/description" className="mr-5 text-black no-underline">HS코드 설명</Link>
                 </nav>
                 {isLoggedIn ?(
-                    <button onClick={logout} className="text-black no-underline mr-5">Logout</button>
+                    <>
+                    <button onClick={handleLogout} className="text-black no-underline mr-5">Logout</button>
+                    {user?.username}
+                    </>
                 ):(
                     <Link to="/login" className="text-black no-underline mr-5">Login</Link>
 

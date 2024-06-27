@@ -7,7 +7,7 @@ export default function ScrollBar_item({ hscode, korean, img }) {
     useEffect(()=>{
         const fetchLikeStatus = async()=>{
             const userId = JSON.parse(localStorage.getItem('user')).id;
-            const response = await fetch(`http://10.125.121.220:8080/like/status/${userId}/${hscode}`);
+            const response = await fetch(`http://10.125.121.220:8080/api/likes/status/${userId}/${hscode}`);
             if(response.ok){
                 const result = await response.json();
                 setIsLiked(result.isLiked);
@@ -22,12 +22,13 @@ export default function ScrollBar_item({ hscode, korean, img }) {
 
     const handleLike = async (e) => {
         e.preventDefault();
+        const memberId = JSON.parse(localStorage.getItem('user')).id
         if (isLiked === false) {
             const likeObj = {
-                member: JSON.parse(localStorage.getItem('user')).id,
+                member: memberId,
                 hsCode: hscode
             };
-            const response = await fetch('http://10.125.121.220:8080/like', {
+            const response = await fetch('http://10.125.121.220:8080/api/likes', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -41,17 +42,12 @@ export default function ScrollBar_item({ hscode, korean, img }) {
                 console.error('Like failed');
             }
         }else{
-            const likeObj = {
-                member: JSON.parse(localStorage.getItem('user')).id,
-                hsCode: hscode
-            };
-            const response = await fetch('http://10.125.121.220:8080/like', {
+            
+            const response = await fetch(`http://10.125.121.220:8080/api/likes/${memberId}/${hscode}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-
-                body: JSON.stringify(likeObj),
             });
             if (response.ok) {
                 setIsLiked(!isLiked)

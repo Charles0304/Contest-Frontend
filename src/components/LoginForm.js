@@ -1,11 +1,13 @@
 import axios from 'axios';
 import React, { useContext, useState } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom';
-import { AuthContext } from './AuthContext';
+import { useSetRecoilState } from 'recoil';
+import { isLoggedInState, userState } from '../recoil/atoms';
 export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const {login} = useContext(AuthContext);
+  const setUser = useSetRecoilState(userState);
+  const setIsLoggedIn = useSetRecoilState(isLoggedInState);
   const navigate = useNavigate();
   
   const handleLogin = async (e)=>{
@@ -23,7 +25,8 @@ export default function LoginForm() {
       localStorage.setItem('token',response.headers['Authorization']);
       //사용자 정보를 로컬 스토리지에 저장
       localStorage.setItem('user',JSON.stringify(data));
-      login();
+      setUser(data)
+      setIsLoggedIn(true);
       navigate('/search')
     }else{
       console.error('Login failed');

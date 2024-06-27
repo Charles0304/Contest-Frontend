@@ -17,7 +17,7 @@ export default function CodeDescription() {
     const [data,setData] = useState([]);
     const [hsList,setHsList] = useState([]);
     useEffect(()=>{
-        fetch('http://10.125.121.220:8080/hscode/categories')
+        fetch('http://10.125.121.220:8080/api/hscode/categories')
         .then((resp)=>resp.json())
         .then((d)=>setData(d));
     },[]);
@@ -45,7 +45,7 @@ export default function CodeDescription() {
         setSubSubCategories([]);
 
         //category에 맞춰서 데이터 불러오기
-        const url = 'http://10.125.121.220:8080/hscode/major?hscode1='+selected
+        const url = 'http://10.125.121.220:8080/api/hscode/major?hscode1='+selected
         
         fetch(url)
         .then((resp)=>resp.json())
@@ -62,7 +62,7 @@ export default function CodeDescription() {
         setSubSubCategories([...new Set(filteredSubSubcategories)]);
         setSelectedSubSubCategory('');
 
-        const url = `http://10.125.121.220:8080/hscode/medium?hscode1=${selectedCategory}&hscode2=${selected}`
+        const url = `http://10.125.121.220:8080/api/hscode/medium?hscode1=${selectedCategory}&hscode2=${selected}`
         
         fetch(url)
         .then((resp)=>resp.json())
@@ -73,7 +73,7 @@ export default function CodeDescription() {
         const selected = e.target.value;
         setSelectedSubSubCategory(selected);
 
-        const url = `http://10.125.121.220:8080/hscode/minor?hscode1=${selectedCategory}&hscode2=${selectedSubCategory}&hscode3=${selected}`
+        const url = `http://10.125.121.220:8080/api/hscode/minor?hscode1=${selectedCategory}&hscode2=${selectedSubCategory}&hscode3=${selected}`
         
         fetch(url)
         .then((resp)=>resp.json())

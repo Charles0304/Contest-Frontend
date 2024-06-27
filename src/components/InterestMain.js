@@ -5,7 +5,7 @@ export default function InterestMain() {
   const [selectedItems, setSelectedItems] = useState([]);
 
   useEffect(() => {
-    fetch('http://10.125.121.220:8080/like/' + JSON.parse(localStorage.getItem('user')).id)
+    fetch('http://10.125.121.220:8080/api/likes/' + JSON.parse(localStorage.getItem('user')).id)
       .then((resp) => resp.json())
       .then((d) => setData(d));
     console.log(data.length)
@@ -22,7 +22,7 @@ export default function InterestMain() {
   const handleDelete = () => {
     const userId = JSON.parse(localStorage.getItem('user')).id;
     const deletePromises = selectedItems.map(hscode =>
-      fetch(`http://10.125.121.220:8080/like/${userId}/${hscode}`, {
+      fetch(`http://10.125.121.220:8080/api/likes/${userId}/${hscode}`, {
         method: "DELETE"
       })
     );
@@ -38,6 +38,7 @@ export default function InterestMain() {
       <div className="mb-4 flex justify-between">
         <span className="text-gray-700">전체 {data.length}건</span>
       </div>
+      <div className='flex-1 overflow-auto'>
       <table className="w-full border-collapse border border-gray-300">
         <thead>
           <tr>
@@ -86,6 +87,7 @@ export default function InterestMain() {
         <br />1) 삭제하고자 하는 데이터를 선택해 주세요.
         <br />2) 삭제 버튼을 클릭해 주세요.
       </p>
+      </div>
     </div>
   )
 }

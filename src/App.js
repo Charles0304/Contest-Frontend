@@ -6,30 +6,37 @@ import { BrowserRouter, Route, Routes, } from 'react-router-dom';
 import Signup from './pages/Signup';
 import MyPage from './pages/MyPage';
 import CodeDescription from './pages/CodeDescription';
-import { AuthProvider, AuthContext } from './components/AuthContext';
+import { RecoilRoot } from 'recoil';
 import React from 'react';
 import QnAPage from './pages/QnAPage';
+import { isLoggedInState } from './recoil/atoms';
+import { useRecoilValue } from 'recoil';
+import LogPage from './pages/LogPage';
 
-const PrivateRoute = ({children})=>{
-  const {isLoggedIn} = React.useContext(AuthContext);
-  return isLoggedIn ? children : <Login/>;
-}
+
+const PrivateRoute = ({ children }) => {
+  const isLoggedIn = useRecoilValue(isLoggedInState);
+  return isLoggedIn ? children : <Login />;
+};
+
+
 
 function App() {
   return (
-    <AuthProvider>
+    <RecoilRoot>
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<Main />}></Route>
           <Route path='/search' element={<Search />}></Route>
           <Route path='/login' element={<Login />}></Route>
           <Route path='/signup' element={<Signup />}></Route>
-          <Route path='/mypage' element={<MyPage />}></Route>
+          <Route path='/mypage' element={<PrivateRoute><MyPage /></PrivateRoute>}></Route>
           <Route path='/description' element={<CodeDescription />}></Route>
-          <Route path='/qna' element={<QnAPage/>}></Route>
+          <Route path='/qna' element={<QnAPage />}></Route>
+          <Route path='/log' element={<LogPage/>}></Route>
         </Routes>
       </BrowserRouter>
-    </AuthProvider>
+    </RecoilRoot>
   );
 }
 

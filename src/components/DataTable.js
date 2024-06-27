@@ -2,15 +2,15 @@ import React from 'react'
 
 export default function DataTable({ data }) {
     return (
-        <div className='overflow-auto h-96 w-full'>
+        <div className='overflow-auto h-full w-5/6'>
             <table className='min-w-full bg-white border border-gray-300'>
                 <thead>
                     <tr>
-                        <th className='px-4 py-2 border'>품목번호</th>
+                        <th className='px-4 py-2 border w-36'>품목번호</th>
                         <th className='px-4 py-2 border'>품명 (한글)</th>
                         <th className='px-4 py-2 border'>품명 (영문)</th>
-                        <th className='px-4 py-2 border'>품명세부 (한글)</th>
-                        <th className='px-4 py-2 border'>품명세부 (영문)</th>
+                        <th className='px-4 py-2 border w-36'>품명세부 (한글)</th>
+                        <th className='px-4 py-2 border w-36'>품명세부 (영문)</th>
                         
                     </tr>
                 </thead>

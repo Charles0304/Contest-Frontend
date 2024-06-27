@@ -26,13 +26,13 @@ export default function QnABoard() {
 
     const handleFormSubmit = (e) => {
         e.preventDefault();
-
+        const userId = JSON.parse(localStorage.getItem('user')).id;
         const newQuestionData = {
             title: newTitle,
             content: newContent,
             isAnswered: false,
             member: {
-                id: 1 // 나중에 로그인 한 사용자로 변경
+                id: userId // 나중에 로그인 한 사용자로 변경
             }
         };
 
@@ -54,7 +54,7 @@ export default function QnABoard() {
 
     const handleAnswerSubmit = (e,questionSeq)=>{
         e.preventDefault();
-        
+        const userId = JSON.parse(localStorage.getItem('user')).id;
         const answerData = {
             title:"답변",
             content:answerContent,
@@ -62,7 +62,7 @@ export default function QnABoard() {
                 seq:questionSeq
             },
             member:{
-                id:1//나중에 로그인 한 사용자로 변경
+                id:userId//나중에 로그인 한 사용자로 변경
             }
         };
 
